@@ -1,6 +1,8 @@
 name: Release
+
 permissions:
   contents: write
+
 on:
   push:
     tags:
@@ -45,11 +47,14 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
-      - name: Build the app
+      - name: Build and release
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          projectPath: '.'
+          projectSrc: './src-tauri'
+          includeDebug: false
           tagName: ${{ github.ref_name }}
           releaseName: 'Release ${{ github.ref_name }}'
           releaseBody: 'Release for ${{ github.ref_name }}'
