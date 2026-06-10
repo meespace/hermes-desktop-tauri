@@ -4,6 +4,10 @@
 
 hermes-desktop-community is a community port of Hermes Desktop from Electron to Tauri.
 
+| page | main | update |
+|:---:|:---:|:---:|
+ ![](screenshot/land.png)| ![](screenshot/main.png) | ![](screenshot/update.png) |
+
 This project is not an attempt to turn Hermes Desktop into a different product. The aim is to keep the existing desktop workflow while replacing Electron's Chromium / Node runtime with Tauri + Rust. Compared with Electron, this combination usually means a smaller app, lower idle overhead, and a clearer split between the native desktop layer and the frontend.
 
 In one local macOS build from this repository, the Tauri `.app` was about `30 MB`, while the corresponding Electron `.app` was about `313 MB`. That is only one measurement under the current build configuration, but the size gap is already quite visible.
