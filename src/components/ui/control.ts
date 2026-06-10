@@ -1,0 +1,6 @@
+export const CONTROL_HEIGHT_SM = 'h-8'
+export const CONTROL_HEIGHT_MD = 'h-9'
+export const CONTROL_RADIUS = 'rounded-[var(--field-radius)]'
+export const CONTROL_BORDER = 'border border-[var(--border)]'
+export const CONTROL_SURFACE = 'bg-[var(--surface)] text-foreground shadow-[var(--field-shadow)]'
+export const CONTROL_MUTED_TEXT = 'text-[var(--muted)]'

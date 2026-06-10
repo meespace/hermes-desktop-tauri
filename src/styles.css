@@ -1,0 +1,1727 @@
+@import 'tailwindcss';
+@import '@heroui/react/styles';
+@plugin '@tailwindcss/typography';
+@import 'tw-shimmer';
+@import 'katex/dist/katex.min.css';
+@import '@vscode/codicons/dist/codicon.css';
+@custom-variant dark (&:is(.dark *, [data-theme='dark'] *));
+
+@font-face {
+  font-family: 'Collapse';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../node_modules/@nous-research/ui/dist/fonts/Collapse-Bold.woff2') format('woff2');
+}
+
+@theme inline {
+  --color-background: var(--dt-background);
+  --color-foreground: var(--dt-foreground);
+  --color-card: var(--dt-card);
+  --color-card-foreground: var(--dt-card-foreground);
+  --color-muted: var(--dt-muted);
+  --color-muted-foreground: var(--dt-muted-foreground);
+  --color-popover: var(--dt-popover);
+  --color-popover-foreground: var(--dt-popover-foreground);
+  --color-primary: var(--dt-primary);
+  --color-primary-foreground: var(--dt-primary-foreground);
+  --color-secondary: var(--dt-secondary);
+  --color-secondary-foreground: var(--dt-secondary-foreground);
+  --color-accent: var(--dt-accent);
+  --color-accent-foreground: var(--dt-accent-foreground);
+  --color-border: var(--dt-border);
+  --color-input: var(--dt-input);
+  --color-ring: var(--dt-ring);
+  --color-destructive: var(--dt-destructive);
+  --color-destructive-foreground: var(--dt-destructive-foreground);
+
+  --color-midground: var(--dt-midground);
+  --color-midground-foreground: var(--dt-midground-foreground);
+
+  --font-sans: var(--dt-font-sans);
+  --font-mono: var(--dt-font-mono);
+
+  --spacing-mul: var(--dt-spacing-mul, 1);
+
+  --radius-xs: calc(var(--radius-scalar) * 0.125rem);
+  --radius-sm: calc(var(--radius-scalar) * 0.5rem);
+  --radius-md: calc(var(--radius-scalar) * 0.625rem);
+  --radius-lg: calc(var(--radius-scalar) * 0.75rem);
+  --radius-xl: calc(var(--radius-scalar) * 1rem);
+  --radius-2xl: calc(var(--radius-scalar) * 1.5rem);
+  --radius-3xl: calc(var(--radius-scalar) * 2rem);
+  --radius-4xl: calc(var(--radius-scalar) * 2.5rem);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+
+  --shadow-ink: var(--dt-foreground);
+  --shadow-xs: 0 0.0625rem 0.125rem color-mix(in srgb, #000 5%, transparent);
+  --shadow-sm:
+    0 0 0 0.0625rem color-mix(in srgb, var(--dt-foreground) 6%, transparent),
+    0 0.125rem 0.5rem color-mix(in srgb, #000 4%, transparent);
+  --shadow-md:
+    0 0 0 0.0625rem color-mix(in srgb, var(--dt-foreground) 8%, transparent),
+    0 0.25rem 1rem color-mix(in srgb, #000 8%, transparent),
+    0 1rem 2rem -1.5rem color-mix(in srgb, #000 18%, transparent);
+  --shadow-lg:
+    inset 0 0.0625rem 0 color-mix(in srgb, #fff 28%, transparent),
+    0 0 0 0.0625rem color-mix(in srgb, var(--dt-foreground) 8%, transparent),
+    0 0.75rem 2rem color-mix(in srgb, #000 12%, transparent);
+  --shadow-header:
+    0 0.0625rem 0 color-mix(in srgb, var(--dt-foreground) 7%, transparent),
+    0 0.625rem 1.5rem -1.25rem color-mix(in srgb, #000 16%, transparent);
+  --shadow-composer: 0 0.0625rem 0.125rem color-mix(in srgb, #000 5%, transparent);
+  --shadow-composer-focus:
+    0 0 0 0.125rem color-mix(in srgb, var(--dt-composer-ring) calc(10% * var(--composer-ring-strength)), transparent),
+    0 0 0 0.0625rem color-mix(in srgb, var(--dt-composer-ring) calc(22% * var(--composer-ring-strength)), transparent),
+    0 0.25rem 0.875rem color-mix(in srgb, #000 8%, transparent),
+    0 0.75rem 2rem -1.25rem color-mix(in srgb, #000 14%, transparent);
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+
+    --background: #f7f8fb;
+    --background-secondary: #f2f4f8;
+    --background-tertiary: #edf0f5;
+    --background-inverse: #101418;
+    --foreground: #101418;
+    --surface: #ffffff;
+    --surface-foreground: #101418;
+    --surface-secondary: color-mix(in srgb, #101418 4%, #ffffff);
+    --surface-tertiary: color-mix(in srgb, #101418 7%, #ffffff);
+    --overlay: #ffffff;
+    --overlay-foreground: #101418;
+    --muted: color-mix(in srgb, #101418 52%, transparent);
+    --default: color-mix(in srgb, #101418 6%, #ffffff);
+    --default-foreground: #101418;
+    --default-hover: color-mix(in srgb, #101418 8%, #ffffff);
+    --default-soft: color-mix(in srgb, #101418 10%, transparent);
+    --default-soft-foreground: #101418;
+    --default-soft-hover: color-mix(in srgb, #101418 14%, transparent);
+    --accent: #2563eb;
+    --accent-foreground: #ffffff;
+    --accent-hover: color-mix(in srgb, #ffffff 10%, #2563eb);
+    --accent-soft: color-mix(in srgb, #2563eb 14%, transparent);
+    --accent-soft-foreground: color-mix(in srgb, #2563eb 20%, #101418);
+    --accent-soft-hover: color-mix(in srgb, #2563eb 18%, transparent);
+    --success: #15803d;
+    --success-foreground: #ffffff;
+    --success-hover: color-mix(in srgb, #ffffff 10%, #15803d);
+    --success-soft: color-mix(in srgb, #15803d 10%, transparent);
+    --success-soft-foreground: #15803d;
+    --success-soft-hover: color-mix(in srgb, #15803d 14%, transparent);
+    --warning: #d6a233;
+    --warning-foreground: #101418;
+    --warning-hover: color-mix(in srgb, #101418 6%, #d6a233);
+    --warning-soft: color-mix(in srgb, #d6a233 10%, transparent);
+    --warning-soft-foreground: #d6a233;
+    --warning-soft-hover: color-mix(in srgb, #d6a233 14%, transparent);
+    --danger: #cf2d56;
+    --danger-foreground: #ffffff;
+    --danger-hover: color-mix(in srgb, #ffffff 10%, #cf2d56);
+    --danger-soft: color-mix(in srgb, #cf2d56 10%, transparent);
+    --danger-soft-foreground: #cf2d56;
+    --danger-soft-hover: color-mix(in srgb, #cf2d56 14%, transparent);
+    --field-background: color-mix(in srgb, #101418 1.8%, #ffffff);
+    --field-foreground: var(--foreground);
+    --field-placeholder: color-mix(in srgb, #101418 46%, transparent);
+    --field-border: color-mix(in srgb, #101418 8%, transparent);
+    --field-hover: color-mix(in srgb, #101418 2.2%, #ffffff);
+    --field-focus: var(--surface);
+    --field-border-hover: color-mix(in srgb, #101418 15%, transparent);
+    --field-border-focus: var(--accent);
+    --segment: var(--surface-secondary);
+    --segment-foreground: var(--foreground);
+    --border: color-mix(in srgb, #101418 6%, transparent);
+    --separator: color-mix(in srgb, #101418 3.2%, transparent);
+    --focus: var(--accent);
+    --link: var(--accent);
+    --backdrop: rgba(10, 12, 16, 0.34);
+    --surface-hover: color-mix(in srgb, #101418 6%, #ffffff);
+    --surface-shadow:
+      0 0 0 0.0625rem color-mix(in srgb, #101418 4.5%, transparent),
+      0 0.5rem 1.25rem -1rem color-mix(in srgb, #000 12%, transparent);
+    --overlay-shadow:
+      0 0 0 0.0625rem color-mix(in srgb, #101418 6%, transparent),
+      0 0.25rem 0.5rem color-mix(in srgb, #000 5%, transparent),
+      0 2rem 5rem -2.25rem color-mix(in srgb, #000 22%, transparent);
+    --field-shadow: 0 0.25rem 0.875rem -0.75rem color-mix(in srgb, #000 12%, transparent);
+
+    --workbench-shell-bg: var(--ui-bg-chrome);
+    --workbench-canvas-bg: color-mix(in srgb, var(--ui-bg-editor) 72%, var(--ui-bg-chrome));
+    --workbench-panel-bg: color-mix(in srgb, var(--ui-bg-editor) 96%, transparent);
+    --workbench-panel-muted-bg: color-mix(in srgb, var(--ui-bg-sidebar) 54%, var(--ui-bg-editor));
+    --workbench-panel-strong-bg: color-mix(in srgb, var(--ui-bg-editor) 84%, var(--ui-bg-elevated));
+    --workbench-panel-stroke: var(--ui-stroke-primary);
+    --workbench-divider: var(--ui-stroke-secondary);
+    --workbench-hover: var(--ui-control-hover-background);
+    --workbench-active: var(--ui-control-active-background);
+    --workbench-shadow: var(--surface-shadow);
+    --workbench-panel-radius: 0.875rem;
+    --workbench-row-radius: 0.5rem;
+    --workbench-pill-radius: 999px;
+
+    --theme-foreground: var(--foreground);
+    --theme-primary: var(--accent);
+    --theme-secondary: var(--default);
+    --theme-accent-soft: var(--accent-soft);
+    --theme-midground: var(--accent);
+    --theme-warm: color-mix(in srgb, var(--accent) 34%, #f4bf91);
+    --theme-background-seed: var(--background);
+    --theme-sidebar-seed: var(--background-secondary);
+    --theme-card-seed: var(--surface);
+    --theme-elevated-seed: var(--overlay);
+    --theme-bubble-seed: var(--surface-secondary);
+    --theme-neutral-chrome: var(--background);
+    --theme-neutral-sidebar: var(--background-secondary);
+    --theme-neutral-card: var(--surface);
+    --theme-mix-chrome: 100%;
+    --theme-mix-sidebar: 100%;
+    --theme-mix-card: 100%;
+    --theme-mix-elevated: 100%;
+    --theme-mix-bubble: 100%;
+    --theme-fill-primary-accent-mix: 16%;
+    --theme-fill-secondary-accent-mix: 11%;
+    --theme-fill-tertiary-accent-mix: 8%;
+    --theme-fill-quaternary-accent-mix: 5%;
+    --theme-fill-quinary-accent-mix: 3%;
+    --theme-stroke-primary-accent-mix: 24%;
+    --theme-stroke-secondary-accent-mix: 16%;
+    --theme-stroke-tertiary-accent-mix: 10%;
+    --theme-stroke-quaternary-accent-mix: 6%;
+    --theme-row-hover-accent-mix: 4%;
+    --theme-row-active-accent-mix: 8%;
+    --theme-control-hover-accent-mix: 6%;
+    --theme-control-active-accent-mix: 8%;
+
+    --ui-base: var(--theme-foreground);
+    --ui-accent: var(--theme-midground);
+    --ui-accent-secondary: var(--theme-primary);
+    --ui-warm: var(--theme-warm);
+    --ui-red: #cf2d56;
+    --ui-orange: #db704b;
+    --ui-yellow: #c08532;
+    --ui-green: #1f8a65;
+    --ui-cyan: #4c7f8c;
+    --ui-blue: #007aff;
+    --ui-purple: #9e94d5;
+    --ui-bg-chrome: color-mix(
+      in srgb,
+      var(--theme-background-seed) var(--theme-mix-chrome),
+      var(--theme-neutral-chrome)
+    );
+    --ui-bg-sidebar: color-mix(
+      in srgb,
+      var(--theme-sidebar-seed) var(--theme-mix-sidebar),
+      var(--theme-neutral-sidebar)
+    );
+    --ui-bg-editor: color-mix(in srgb, var(--theme-card-seed) var(--theme-mix-card), var(--theme-neutral-card));
+    --ui-bg-elevated: color-mix(
+      in srgb,
+      var(--theme-elevated-seed) var(--theme-mix-elevated),
+      var(--theme-neutral-card)
+    );
+    --ui-bg-card: var(--surface-secondary);
+    --ui-bg-input: var(--field-background);
+    --ui-bg-primary: color-mix(
+      in srgb,
+      var(--ui-accent) var(--theme-fill-primary-accent-mix),
+      color-mix(in srgb, var(--ui-base) 10%, transparent)
+    );
+    --ui-bg-secondary: color-mix(
+      in srgb,
+      var(--ui-accent) var(--theme-fill-secondary-accent-mix),
+      color-mix(in srgb, var(--ui-base) 7%, transparent)
+    );
+    --ui-bg-tertiary: color-mix(
+      in srgb,
+      var(--ui-accent) var(--theme-fill-tertiary-accent-mix),
+      color-mix(in srgb, var(--ui-base) 5%, transparent)
+    );
+    --ui-bg-quaternary: color-mix(
+      in srgb,
+      var(--ui-accent) var(--theme-fill-quaternary-accent-mix),
+      color-mix(in srgb, var(--ui-base) 4%, transparent)
+    );
+    --ui-bg-quinary: color-mix(
+      in srgb,
+      var(--ui-accent) var(--theme-fill-quinary-accent-mix),
+      color-mix(in srgb, var(--ui-base) 3%, transparent)
+    );
+    --ui-row-hover-background: color-mix(
+      in srgb,
+      var(--ui-accent) var(--theme-row-hover-accent-mix),
+      color-mix(in srgb, var(--ui-base) 3%, transparent)
+    );
+    --ui-row-active-background: color-mix(
+      in srgb,
+      var(--ui-accent) var(--theme-row-active-accent-mix),
+      color-mix(in srgb, var(--ui-base) 5%, transparent)
+    );
+    --ui-control-hover-background: color-mix(
+      in srgb,
+      var(--ui-accent) var(--theme-control-hover-accent-mix),
+      color-mix(in srgb, var(--ui-base) 4%, transparent)
+    );
+    --ui-control-active-background: color-mix(
+      in srgb,
+      var(--ui-accent) var(--theme-control-active-accent-mix),
+      color-mix(in srgb, var(--ui-base) 5%, transparent)
+    );
+    --ui-text-primary: color-mix(in srgb, var(--ui-base) 94%, transparent);
+    --ui-text-secondary: color-mix(in srgb, var(--ui-base) 74%, transparent);
+    --ui-text-tertiary: color-mix(in srgb, var(--ui-base) 54%, transparent);
+    --ui-text-quaternary: color-mix(in srgb, var(--ui-base) 36%, transparent);
+    --ui-stroke-primary: color-mix(
+      in srgb,
+      var(--ui-accent) var(--theme-stroke-primary-accent-mix),
+      color-mix(in srgb, var(--ui-base) 10%, transparent)
+    );
+    --ui-stroke-secondary: color-mix(
+      in srgb,
+      var(--ui-accent) var(--theme-stroke-secondary-accent-mix),
+      color-mix(in srgb, var(--ui-base) 7%, transparent)
+    );
+    --ui-stroke-tertiary: color-mix(
+      in srgb,
+      var(--ui-accent) var(--theme-stroke-tertiary-accent-mix),
+      color-mix(in srgb, var(--ui-base) 5%, transparent)
+    );
+    --ui-stroke-quaternary: color-mix(
+      in srgb,
+      var(--ui-accent) var(--theme-stroke-quaternary-accent-mix),
+      color-mix(in srgb, var(--ui-base) 3%, transparent)
+    );
+    --ui-sash-hover-border: color-mix(in srgb, var(--ui-accent) 18%, var(--ui-stroke-tertiary));
+    --ui-sash-hover-background: color-mix(in srgb, var(--ui-accent) 6%, transparent);
+    --ui-surface-background: var(--ui-bg-editor);
+    --ui-sidebar-surface-background: var(--ui-bg-sidebar);
+    --ui-chat-surface-background: var(--ui-bg-chrome);
+    --ui-editor-surface-background: var(--ui-bg-chrome);
+    --ui-chat-bubble-background: color-mix(
+      in srgb,
+      var(--theme-bubble-seed) var(--theme-mix-bubble),
+      var(--theme-neutral-card)
+    );
+    --ui-chat-bubble-opaque-background: var(--ui-bg-editor);
+    --ui-inline-code-background: color-mix(in srgb, #141414 5%, transparent);
+    --ui-inline-code-border: color-mix(in srgb, #141414 8%, transparent);
+    --ui-inline-code-foreground: color-mix(in srgb, #141414 88%, transparent);
+    --ui-selection-background: color-mix(in srgb, #ffd24a 55%, transparent);
+
+    --dt-background: var(--ui-bg-chrome);
+    --dt-foreground: var(--ui-text-primary);
+    --dt-card: var(--ui-bg-editor);
+    --dt-card-foreground: var(--ui-text-primary);
+    --dt-muted: var(--ui-bg-tertiary);
+    --dt-muted-foreground: var(--ui-text-tertiary);
+    --dt-popover: color-mix(in srgb, var(--ui-bg-elevated) 96%, transparent);
+    --dt-popover-foreground: var(--ui-text-primary);
+    --dt-primary: var(--theme-primary);
+    --dt-primary-foreground: var(--accent-foreground);
+    --dt-secondary: var(--theme-secondary);
+    --dt-secondary-foreground: var(--default-foreground);
+    --dt-accent: var(--accent-soft);
+    --dt-accent-foreground: var(--accent-soft-foreground);
+    --dt-border: var(--border);
+    --dt-input: var(--field-border);
+    --dt-ring: var(--focus);
+    --dt-midground: var(--theme-midground);
+    --dt-composer-ring: var(--ui-base);
+    --dt-destructive: var(--danger);
+    --dt-destructive-foreground: var(--danger-foreground);
+    --dt-sidebar-bg: var(--ui-bg-sidebar);
+    --dt-sidebar-border: var(--ui-stroke-secondary);
+    --dt-user-bubble: var(--ui-chat-bubble-background);
+    --dt-user-bubble-border: var(--ui-stroke-tertiary);
+
+    --dt-font-sans: 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --dt-font-mono: 'SF Mono', Menlo, Monaco, 'Courier New', monospace;
+    --dt-base-size: 1rem;
+    --dt-line-height: 1.5;
+    --dt-letter-spacing: 0;
+    --dt-spacing-mul: 1;
+
+    --radius: 0.72rem;
+    --radius-scalar: 0.78;
+    --field-radius: 0.62rem;
+
+    /* Space under last message vs overlay composer — driven by the measured composer height (see composer/index.tsx). */
+    --thread-last-message-clearance: calc(var(--composer-measured-height) + 1.875rem);
+
+    --composer-shell-pad-block-end: 0.625rem;
+    --message-text-indent: 0.625rem;
+    --conversation-text-font-size: 0.8125rem;
+    --conversation-tool-font-size: var(--conversation-text-font-size);
+    --conversation-caption-font-size: 0.734375rem;
+    --conversation-line-height: 1.1rem;
+    --conversation-caption-line-height: 1rem;
+    --conversation-turn-gap: 0.5625rem;
+    --sticky-human-top: 0.23rem;
+    --file-tree-row-height: 1.3125rem;
+
+    --composer-width: 47rem;
+    --composer-control-size: 1.75rem;
+    --composer-control-primary-size: 1.9375rem;
+    --composer-control-gap: 0.375rem;
+    --composer-row-gap: 0.5rem;
+    --composer-ring-strength: 1;
+    --composer-surface-pad-x: 0.75rem;
+    --composer-surface-pad-y: 0.5625rem;
+    --composer-input-min-height: 2.625rem;
+    --composer-input-max-height: 9.375rem;
+    --composer-input-inline-min-width: 8rem;
+    --composer-fallback-height: 3.875rem;
+    --composer-measured-height: calc(0.5rem + var(--composer-shell-pad-block-end) + var(--composer-fallback-height));
+    --composer-surface-measured-height: var(--composer-fallback-height);
+    --thread-viewport-height: max(
+      0rem,
+      calc(100% - var(--composer-measured-height) + var(--composer-surface-measured-height))
+    );
+    --vsq: min(0.5vh, 0.5vw);
+    --image-preview-max-width: 34rem;
+    --image-preview-height: clamp(16.25rem, calc(var(--vsq) * 100), 26.25rem);
+
+    --sidebar-width: 13.5rem;
+    --chat-min-width: 28rem;
+    --titlebar-control-size: 1.5rem;
+    --titlebar-control-height: 1.5rem;
+    --sidebar-content-inline-padding: 0.9375rem;
+
+    --sidebar: var(--dt-sidebar-bg);
+    --sidebar-foreground: var(--dt-foreground);
+    --sidebar-primary: var(--dt-primary);
+    --sidebar-primary-foreground: var(--dt-primary-foreground);
+    --sidebar-accent: var(--ui-control-active-background);
+    --sidebar-accent-foreground: var(--dt-accent-foreground);
+    --sidebar-border: var(--dt-sidebar-border);
+    --sidebar-ring: var(--dt-ring);
+    --sidebar-edge-border: color-mix(in srgb, var(--ui-base) 7.5%, transparent);
+    --chrome-action-hover: var(--ui-control-hover-background);
+
+    --midground: var(--dt-midground);
+
+    --warm-glow: color-mix(in srgb, var(--ui-warm) 32%, color-mix(in srgb, var(--ui-accent) 6%, transparent));
+    /* `--noise-opacity-mul` is set per-mode by `applyTheme()`. */
+    --noise-opacity-mul: 1;
+    --backdrop-invert-mul: 1;
+  }
+
+  :root.dark,
+  :root[data-theme='dark'] {
+    /* Per-mode mix knobs — overridden inline by `applyTheme()` per skin. */
+    --theme-foreground: var(--foreground);
+    --theme-primary: var(--accent);
+    --theme-secondary: var(--default);
+    --theme-accent-soft: var(--accent-soft);
+    --theme-midground: var(--accent);
+    --theme-background-seed: var(--background);
+    --theme-sidebar-seed: var(--background-secondary);
+    --theme-card-seed: var(--surface);
+    --theme-elevated-seed: var(--overlay);
+    --theme-bubble-seed: var(--surface-secondary);
+    --theme-neutral-chrome: var(--background);
+    --theme-neutral-sidebar: var(--background-secondary);
+    --theme-neutral-card: var(--surface);
+    --theme-mix-chrome: 100%;
+    --theme-mix-card: 100%;
+    --theme-mix-elevated: 100%;
+    --theme-mix-bubble: 100%;
+
+    /* Dark-only accent palette overrides. */
+    --ui-red: #e75e78;
+    --ui-green: #55a583;
+    --ui-cyan: #6f9ba6;
+
+    --sidebar-edge-border: color-mix(in srgb, var(--ui-base) 12%, transparent);
+    --composer-ring-strength: 1.3;
+    --backdrop-invert-mul: 0;
+
+    --ui-inline-code-background: color-mix(in srgb, #ffffff 7%, transparent);
+    --ui-inline-code-border: color-mix(in srgb, #ffffff 10%, transparent);
+    --ui-inline-code-foreground: color-mix(in srgb, #ffffff 88%, transparent);
+    --ui-selection-background: color-mix(in srgb, #ffd24a 38%, transparent);
+  }
+
+  * {
+    box-sizing: border-box;
+    border-color: var(--dt-border);
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  html {
+    font-size: var(--dt-base-size, 0.875rem);
+  }
+
+  body {
+    margin: 0;
+    background: var(--workbench-shell-bg);
+    color: var(--dt-foreground);
+    font-family: var(--dt-font-sans);
+    font-size: 0.8125rem;
+    line-height: var(--dt-line-height, 1.55);
+    letter-spacing: var(--dt-letter-spacing, 0);
+    overflow: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button,
+  textarea {
+    font: inherit;
+  }
+
+  :where(
+    a,
+    .underline,
+    [class~='hover:underline'],
+    [class~='focus:underline'],
+    [class~='focus-visible:underline'],
+    [class~='group-hover:underline'],
+    [class~='peer-hover:underline']
+  ) {
+    text-decoration-color: color-mix(in srgb, currentColor 20%, transparent);
+    text-underline-offset: 0.25rem;
+  }
+
+  *::selection {
+    background: var(--ui-selection-background);
+    color: inherit;
+  }
+}
+
+.dither {
+  background: repeating-conic-gradient(currentColor 0% 25%, transparent 0% 50%) 0 0 / 0.125rem 0.125rem;
+}
+
+:root:not([style*='--theme-asset-bg:']) .theme-default-filler {
+  display: block;
+}
+
+:root[style*='--theme-asset-bg:'] .theme-default-filler {
+  display: none;
+}
+
+@layer utilities {
+  [class*='rounded-full'],
+  [class*=':rounded-full'] {
+    border-radius: calc(var(--radius-scalar) * 9999rem);
+  }
+}
+
+@keyframes arc-border {
+  0% {
+    background-position: 15% 15%;
+  }
+  100% {
+    background-position: 75% 75%;
+  }
+}
+
+.arc-border {
+  --arc-c0: color-mix(in srgb, var(--dt-foreground) 0%, transparent);
+  --arc-c1: var(--dt-midground);
+  --arc-c2: var(--dt-background);
+  --arc-angle: 160deg;
+  --arc-width: 0.078125rem;
+  --arc-inset: -0.125rem;
+  --arc-duration: 2.23s;
+
+  pointer-events: none;
+  position: absolute;
+  overflow: hidden;
+  border-radius: inherit;
+  inset: var(--arc-inset);
+  padding: var(--arc-width);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+:root.dark .arc-border {
+  --arc-c1: var(--dt-foreground);
+}
+
+.arc-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    var(--arc-angle),
+    transparent 0%,
+    var(--arc-c0) 15%,
+    var(--arc-c1) 20%,
+    var(--arc-c2) 25%,
+    transparent 35%,
+    transparent 40%,
+    var(--arc-c0) 55%,
+    var(--arc-c1) 60%,
+    var(--arc-c2) 65%,
+    transparent 75%,
+    transparent 80%,
+    var(--arc-c0) 95%,
+    var(--arc-c1) 100%
+  );
+  background-size: 300% 300%;
+  animation: arc-border var(--arc-duration) linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arc-border::before {
+    animation: none;
+  }
+}
+
+button {
+  -webkit-app-region: no-drag;
+}
+
+[data-slot='button'] {
+  box-shadow: none;
+  min-height: 1.875rem;
+  border-radius: var(--field-radius);
+  transition-duration: 100ms;
+}
+
+[data-slot='button'][data-variant='outline'],
+[data-slot='button'][data-variant='secondary'] {
+  border-color: var(--workbench-divider);
+  background: color-mix(in srgb, var(--surface) 84%, transparent);
+  color: var(--ui-text-primary);
+}
+
+[data-slot='button'][data-variant='ghost'] {
+  color: var(--ui-text-secondary);
+}
+
+[data-slot='button'][data-variant='outline']:hover,
+[data-slot='button'][data-variant='secondary']:hover,
+[data-slot='button'][data-variant='ghost']:hover {
+  background: var(--workbench-hover);
+  color: var(--ui-text-primary);
+}
+
+[data-slot='dropdown-menu-content'],
+[data-slot='context-menu-content'],
+[data-slot='context-menu-sub-content'],
+[data-slot='select-content'],
+[data-slot='dialog-content'] {
+  border-color: var(--workbench-divider);
+  background: color-mix(in srgb, var(--surface) 98%, transparent);
+  box-shadow: 0 18px 52px -34px rgba(15, 23, 42, 0.42);
+  backdrop-filter: blur(0.75rem) saturate(1.02);
+  -webkit-backdrop-filter: blur(0.75rem) saturate(1.02);
+}
+
+[data-slot='dropdown-menu-item']:focus,
+[data-slot='dropdown-menu-checkbox-item']:focus,
+[data-slot='dropdown-menu-radio-item']:focus,
+[data-slot='context-menu-item']:focus {
+  background: var(--workbench-hover);
+  color: var(--ui-text-primary);
+}
+
+[data-slot='dropdown-menu-item'],
+[data-slot='dropdown-menu-checkbox-item'],
+[data-slot='dropdown-menu-radio-item'],
+[data-slot='context-menu-item'] {
+  font-weight: 450;
+  letter-spacing: -0.005em;
+}
+
+input,
+textarea,
+[contenteditable]:not([contenteditable='false']),
+[data-slot='aui_user-message-root'],
+[data-slot='aui_assistant-message-content'],
+[data-selectable-text='true'],
+[data-selectable-text='true'] * {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+button,
+[role='button'] {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+img,
+video,
+canvas {
+  -webkit-user-drag: none;
+}
+
+/* Shared input chrome — mirrors composer hover/focus FX. Unlayered to beat Tailwind utilities. */
+.desktop-input-chrome {
+  --ring-pct: 18%;
+  --ring-fall: var(--dt-input);
+  background: color-mix(in srgb, var(--dt-card) 68%, transparent);
+  border-color: color-mix(
+    in srgb,
+    var(--dt-composer-ring) calc(var(--ring-pct) * var(--composer-ring-strength)),
+    var(--ring-fall)
+  );
+  box-shadow: var(--shadow-composer);
+  transition:
+    background-color 200ms ease-out,
+    border-color 200ms ease-out,
+    box-shadow 200ms ease-out;
+}
+
+.desktop-input-chrome:hover {
+  --ring-pct: 30%;
+  background: color-mix(in srgb, var(--dt-card) 86%, transparent);
+}
+
+.desktop-input-chrome:focus {
+  --ring-pct: 45%;
+  --ring-fall: transparent;
+  background: var(--dt-card);
+  box-shadow: var(--shadow-composer-focus);
+  outline: none;
+}
+
+.desktop-input-chrome[aria-invalid='true'] {
+  border-color: var(--dt-destructive);
+}
+
+.desktop-input-chrome[aria-invalid='true']:focus {
+  box-shadow:
+    0 0 0 0.125rem color-mix(in srgb, var(--dt-destructive) 18%, transparent),
+    0 0 0 0.0625rem color-mix(in srgb, var(--dt-destructive) 34%, transparent),
+    0 0.1875rem 0.625rem color-mix(in srgb, var(--dt-destructive) 12%, transparent);
+}
+
+@layer components {
+  .scrollbar-dt,
+  .scrollbar-dt * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--dt-midground) 18%, transparent) transparent;
+  }
+
+  .scrollbar-dt::-webkit-scrollbar,
+  .scrollbar-dt *::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+
+  .scrollbar-dt::-webkit-scrollbar-track,
+  .scrollbar-dt::-webkit-scrollbar-corner,
+  .scrollbar-dt *::-webkit-scrollbar-track,
+  .scrollbar-dt *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  .scrollbar-dt::-webkit-scrollbar-thumb,
+  .scrollbar-dt *::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--dt-midground) 18%, transparent);
+    border-radius: 9999rem;
+    border: 0.125rem solid transparent;
+    background-clip: padding-box;
+  }
+
+  .scrollbar-dt::-webkit-scrollbar-thumb:hover,
+  .scrollbar-dt *::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--dt-midground) 40%, transparent);
+    background-clip: padding-box;
+  }
+
+  .scrollbar-dt::-webkit-scrollbar-button,
+  .scrollbar-dt *::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  /* Variant for portaled overlays (Radix DropdownMenu, Popover, etc.) that
+     render under document.body, outside the `.scrollbar-dt` scope on
+     #root. Same visual treatment, applied directly to the overlay
+     container so its (and only its) internal scrollbar is themed. */
+  .dt-portal-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--dt-midground) 28%, transparent) transparent;
+  }
+
+  .dt-portal-scrollbar::-webkit-scrollbar {
+    width: 0.375rem;
+    height: 0.375rem;
+  }
+
+  .dt-portal-scrollbar::-webkit-scrollbar-track,
+  .dt-portal-scrollbar::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  .dt-portal-scrollbar::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--dt-midground) 28%, transparent);
+    border-radius: 9999rem;
+    border: 0.0625rem solid transparent;
+    background-clip: padding-box;
+  }
+
+  .dt-portal-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--dt-midground) 50%, transparent);
+    background-clip: padding-box;
+  }
+
+  .dt-portal-scrollbar::-webkit-scrollbar-button {
+    display: none;
+  }
+}
+
+/* Bottom clearance lives on [data-slot='aui_composer-clearance'] —
+   virtualized items unmount, so :nth-last-child can't fire reliably. */
+
+[data-slot='aui_assistant-message-content'] {
+  padding-left: var(--message-text-indent);
+  font-size: var(--conversation-text-font-size);
+  line-height: 1.5;
+}
+
+[data-slot='aui_assistant-message-content'] .aui-md,
+[data-slot='aui_assistant-message-content'] .aui-md :where(p, li, blockquote, table, pre) {
+  font-size: inherit;
+}
+
+/* Streamed prose hangs slightly indented from the tool/todo column so the
+   reading column reads as a "reply" within the conversation gutter. Tools,
+   todos, and thinking blocks keep the existing --message-text-indent so they
+   remain flush with the user message text above them. */
+[data-slot='aui_assistant-message-content'] > .aui-md {
+  padding-inline-start: var(--md-text-indent, 0.5rem);
+}
+
+[data-slot='aui_user-message-root'] {
+  top: var(--sticky-human-top);
+}
+
+[data-slot='aui_user-message-root'],
+[data-slot='aui_edit-composer-root'] {
+  font-size: var(--conversation-text-font-size);
+}
+
+/* Sticky human bubbles clamp to ~2 lines with a soft bottom fade so a long
+   prompt doesn't dominate the viewport while you read the response stuck
+   beneath it. The clamp lifts on hover / focus (clicking the bubble opens the
+   edit composer, which already shows the full text). --human-msg-full is the
+   measured content height (set in UserMessage) so expand/collapse animates to
+   the real height instead of overshooting the cap. */
+.sticky-human-clamp {
+  max-height: calc(2 * var(--dt-line-height) * var(--conversation-text-font-size) + 0.15rem);
+  overflow: hidden;
+  transition: max-height 0.08s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sticky-human-clamp[data-clamped='true'] {
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
+  mask-image: linear-gradient(to bottom, #000 55%, transparent);
+}
+
+.composer-human-message:hover .sticky-human-clamp,
+.composer-human-message:focus-within .sticky-human-clamp {
+  max-height: min(var(--human-msg-full, 24rem), 24rem);
+  overflow-y: auto;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+/* The thread renders items in natural document flow (padding spacers, not
+   transforms) and @tanstack/react-virtual already adjusts scrollTop itself
+   when an off-screen turn is measured and its real height differs from the
+   220px estimate. The browser's native scroll anchoring (overflow-anchor:
+   auto) would adjust scrollTop for that SAME size delta, so the two
+   double-correct and the view lurches — most visibly on Windows mouse wheels,
+   whose coarse notches mount/measure several under-estimated turns per tick.
+   Opt out of native anchoring so only the virtualizer compensates. */
+[data-slot='aui_thread-viewport'] {
+  overflow-anchor: none;
+}
+
+[data-slot='aui_thread-content'] {
+  max-width: var(--composer-width);
+  padding-inline: 1.5rem;
+}
+
+[data-slot='aui_intro'] {
+  align-items: center;
+  justify-content: center;
+  padding-bottom: var(--composer-measured-height);
+  text-align: center;
+}
+
+[data-slot='aui_intro'] > div {
+  max-width: min(var(--composer-width), 82vw);
+}
+
+[data-slot='aui_intro'] p:last-child {
+  max-width: 34rem;
+  margin-inline: auto;
+  color: var(--ui-text-tertiary);
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.fit-text {
+  display: flex;
+  font-size: var(--fit-text-min, 1rem);
+  container-type: inline-size;
+  --captured-length: initial;
+  --support-sentinel: var(--captured-length, 9999px);
+}
+
+.fit-text > [aria-hidden='true'] {
+  visibility: hidden;
+}
+
+.fit-text > :not([aria-hidden='true']) {
+  flex-grow: 1;
+  container-type: inline-size;
+  --captured-length: 100cqi;
+  --available-space: var(--captured-length);
+}
+
+.fit-text > :not([aria-hidden='true']) > * {
+  display: block;
+  inline-size: var(--available-space);
+  line-height: var(--fit-text-line-height, 1);
+  --support-sentinel: inherit;
+  --captured-length: 100cqi;
+  --ratio: tan(atan2(var(--available-space), var(--available-space) - var(--captured-length)));
+  --font-size: clamp(
+    var(--fit-text-min, 1em),
+    1em * var(--ratio),
+    var(--fit-text-max, infinity * 1px) - var(--support-sentinel)
+  );
+  font-size: var(--font-size);
+}
+
+@container (inline-size > 0) {
+  .fit-text > :not([aria-hidden='true']) > * {
+    white-space: nowrap;
+  }
+}
+
+@property --captured-length {
+  syntax: '<length>';
+  initial-value: 0px;
+  inherits: true;
+}
+
+@property --captured-length2 {
+  syntax: '<length>';
+  initial-value: 0px;
+  inherits: true;
+}
+
+[data-slot='composer-root'] {
+  width: min(var(--composer-width), calc(100% - 2rem));
+  padding-bottom: var(--composer-shell-pad-block-end);
+}
+
+[data-slot='composer-root'] > .pointer-events-none {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in srgb, var(--ui-chat-surface-background) 88%, transparent)
+  ) !important;
+}
+
+[data-slot='composer-surface'] {
+  border-color: var(--ui-stroke-secondary) !important;
+  box-shadow: var(--shadow-composer) !important;
+}
+
+[data-slot='composer-fade'] {
+  min-height: 2.375rem;
+}
+
+[data-slot='composer-rich-input'] {
+  color: var(--ui-text-primary);
+  font-size: 0.8125rem;
+}
+
+[data-slot='composer-rich-input']:empty::before {
+  color: var(--ui-text-tertiary) !important;
+}
+
+[data-slot='composer-root']:focus-within [data-slot='composer-surface'] > [aria-hidden='true'] {
+  background: var(--ui-chat-bubble-background) !important;
+}
+
+/* Desktop visual unification. Keep routine UI quiet: thin separators, compact
+   rows, no stacked card chrome unless the surface is genuinely floating. */
+[data-slot='sidebar'] {
+  --sidebar-accent: var(--workbench-active);
+}
+
+[data-slot='sidebar-content'] {
+  scrollbar-gutter: stable;
+}
+
+[data-slot='sidebar-content'] [data-sidebar='menu-button'],
+[data-slot='sidebar-content'] button {
+  box-shadow: none;
+}
+
+.heroui-sidebar-content {
+  margin: 0.55rem 0.55rem 0.45rem;
+  padding: 0.34rem;
+  border: 1px solid color-mix(in srgb, var(--workbench-divider) 46%, transparent);
+  border-radius: 1.08rem;
+  background:
+    radial-gradient(circle at 14% 0%, color-mix(in srgb, var(--accent) 6.5%, transparent), transparent 30%),
+    linear-gradient(180deg, color-mix(in srgb, #ffffff 48%, transparent), transparent 24%),
+    color-mix(in srgb, var(--surface) 48%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 52%, transparent),
+    0 0.75rem 1.75rem color-mix(in srgb, var(--foreground) 3.5%, transparent);
+}
+
+.heroui-sidebar-top-card {
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0.8rem 0.8rem 0.62rem 0.62rem;
+  background: transparent;
+  padding: 0.12rem 0.12rem 0.28rem;
+}
+
+.heroui-sidebar-brand {
+  display: flex;
+  min-height: 2.18rem;
+  align-items: center;
+  gap: 0.42rem;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--workbench-divider) 58%, transparent);
+  border-radius: 0;
+  background: transparent;
+  padding: 0.28rem 0.38rem 0.42rem;
+}
+
+.heroui-sidebar-brand-icon {
+  display: grid;
+  width: 1.42rem;
+  height: 1.42rem;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 0.62rem;
+  background:
+    radial-gradient(circle at 35% 22%, color-mix(in srgb, #ffffff 82%, transparent), transparent 38%),
+    color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.heroui-sidebar-badge {
+  display: inline-flex;
+  height: 0.95rem;
+  flex-shrink: 0;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--accent) 12%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  padding-inline: 0.32rem;
+  color: var(--accent);
+  font-size: 0.47rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.heroui-sidebar-brand-actions {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.heroui-sidebar-chrome-button {
+  display: grid;
+  width: 1.38rem;
+  height: 1.38rem;
+  cursor: pointer;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: color-mix(in srgb, var(--foreground) 54%, transparent);
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+
+.heroui-sidebar-chrome-button:hover {
+  border-color: color-mix(in srgb, var(--foreground) 4%, transparent);
+  background: color-mix(in srgb, var(--foreground) 4.5%, transparent);
+  color: var(--foreground);
+}
+
+.heroui-sidebar-menu {
+  display: grid;
+  gap: 0.12rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0.32rem 0 0;
+}
+
+.heroui-sidebar-search-zone {
+  padding: 0.36rem 0.1rem 0.34rem;
+  border-top: 1px solid color-mix(in srgb, var(--workbench-divider) 34%, transparent);
+}
+
+.heroui-sidebar-menu-item {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 1.78rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.48rem;
+  border: 1px solid transparent;
+  border-radius: 0.62rem;
+  padding-inline: 0.45rem 0.55rem;
+  color: color-mix(in srgb, var(--foreground) 70%, transparent);
+  font-size: 0.7rem;
+  font-weight: 540;
+  letter-spacing: -0.01em;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease,
+    transform 120ms ease;
+}
+
+.heroui-sidebar-menu-item:hover {
+  border-color: color-mix(in srgb, var(--foreground) 3.5%, transparent);
+  background: color-mix(in srgb, var(--foreground) 4.5%, transparent);
+  color: var(--foreground);
+}
+
+.heroui-sidebar-menu-item.is-active {
+  border-color: color-mix(in srgb, var(--accent) 13%, transparent);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 13%, transparent), color-mix(in srgb, var(--accent) 6%, transparent)),
+    color-mix(in srgb, var(--surface) 78%, transparent);
+  color: var(--accent);
+}
+
+.heroui-sidebar-menu-icon {
+  display: grid;
+  width: 1.08rem;
+  height: 1.08rem;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 0.45rem;
+  background: color-mix(in srgb, currentColor 7%, transparent);
+  color: color-mix(in srgb, currentColor 78%, transparent);
+}
+
+.heroui-sidebar-search {
+  display: flex;
+  height: 1.84rem;
+  align-items: center;
+  gap: 0.42rem;
+  border: 1px solid color-mix(in srgb, var(--workbench-divider) 34%, transparent);
+  border-radius: 0.78rem;
+  background: color-mix(in srgb, var(--surface) 34%, transparent);
+  padding-inline: 0.52rem;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.heroui-sidebar-search:focus-within {
+  border-color: color-mix(in srgb, var(--accent) 24%, transparent);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  box-shadow: 0 0 0 0.1875rem color-mix(in srgb, var(--accent) 6%, transparent);
+}
+
+.heroui-sidebar-icon-button,
+.heroui-sidebar-section-action {
+  display: grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+  place-items: center;
+  border-radius: 0.55rem;
+  color: var(--muted);
+  transition:
+    background-color 120ms ease,
+    color 120ms ease,
+    opacity 120ms ease;
+}
+
+.heroui-sidebar-icon-button:hover,
+.heroui-sidebar-section-action:hover,
+.heroui-sidebar-section-action.is-active {
+  background: var(--workbench-hover);
+  color: var(--foreground);
+  opacity: 1;
+}
+
+.heroui-sidebar-section-header {
+  display: flex;
+  min-height: 1.85rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0.375rem 0.2rem;
+}
+
+.heroui-sidebar-section-card {
+  overflow: hidden;
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--workbench-divider) 34%, transparent);
+  border-radius: 0;
+  background: transparent;
+  padding: 0.24rem 0.08rem 0.26rem;
+}
+
+.heroui-sidebar-section-button {
+  display: flex;
+  width: fit-content;
+  cursor: pointer;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 0.55rem;
+  background: transparent;
+  padding: 0.25rem 0.375rem;
+  text-align: left;
+  line-height: 1;
+}
+
+.heroui-sidebar-section-button:hover {
+  background: color-mix(in srgb, var(--foreground) 3%, transparent);
+}
+
+.heroui-session-list {
+  gap: 0.12rem;
+  padding: 0.1rem;
+}
+
+.heroui-session-group {
+  display: grid;
+  gap: 0.08rem;
+  padding-top: 0.05rem;
+}
+
+.heroui-session-group + .heroui-session-group {
+  margin-top: 0.28rem;
+  padding-top: 0.28rem;
+  border-top: 1px solid color-mix(in srgb, var(--workbench-divider) 36%, transparent);
+}
+
+.heroui-session-group-header {
+  display: flex;
+  min-height: 1.35rem;
+  align-items: center;
+  gap: 0.25rem;
+  padding-inline: 0.26rem;
+  color: var(--muted);
+  font-size: 0.62rem;
+  font-weight: 560;
+}
+
+.heroui-session-group-button {
+  display: inline-flex;
+  min-width: 0;
+  cursor: pointer;
+  align-items: center;
+  gap: 0.3rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  padding: 0.16rem 0.34rem;
+  text-align: left;
+  letter-spacing: 0.01em;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+}
+
+.heroui-session-group-button:hover {
+  background: color-mix(in srgb, var(--foreground) 3.5%, transparent);
+  color: var(--foreground);
+}
+
+.heroui-session-row {
+  position: relative;
+  display: grid;
+  min-height: 1.72rem;
+  cursor: pointer;
+  grid-template-columns: minmax(0, 1fr) 1.45rem;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 0.65rem;
+  color: color-mix(in srgb, var(--foreground) 72%, transparent);
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease,
+    transform 120ms ease;
+}
+
+.heroui-session-row:hover {
+  border-color: color-mix(in srgb, var(--foreground) 2.6%, transparent);
+  background: color-mix(in srgb, var(--foreground) 3.2%, transparent);
+  color: var(--foreground);
+}
+
+.heroui-session-row.is-selected {
+  border-color: color-mix(in srgb, var(--accent) 10%, transparent);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 10%, transparent), color-mix(in srgb, var(--accent) 4%, transparent)),
+    color-mix(in srgb, var(--surface) 48%, transparent);
+  color: var(--foreground);
+}
+
+.heroui-session-row.is-selected::before {
+  content: '';
+  position: absolute;
+  inset-block: 0.4rem;
+  left: 0.25rem;
+  width: 0.12rem;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.heroui-session-row.is-dragging {
+  z-index: 10;
+  cursor: grabbing;
+  opacity: 0.64;
+}
+
+.heroui-session-row-main {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  min-width: 0;
+  cursor: pointer;
+  align-items: center;
+  gap: 0.36rem;
+  background: transparent;
+  padding: 0.075rem 0.15rem 0.075rem 0.44rem;
+  text-align: left;
+}
+
+.heroui-session-row:hover .heroui-session-row-main {
+  padding-right: 2rem;
+}
+
+.heroui-session-marker {
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 999px;
+  background: transparent;
+  opacity: 0;
+  transition:
+    background-color 120ms ease,
+    opacity 120ms ease;
+}
+
+.heroui-session-row:hover .heroui-session-marker {
+  background: color-mix(in srgb, var(--foreground) 24%, transparent);
+  opacity: 0.62;
+}
+
+.heroui-session-row.is-selected .heroui-session-marker {
+  background: var(--accent);
+  opacity: 1;
+}
+
+.heroui-session-marker.is-working {
+  width: 0.38rem;
+  height: 0.38rem;
+  background: var(--accent);
+  box-shadow: 0 0 0.625rem color-mix(in srgb, var(--accent) 55%, transparent);
+  opacity: 1;
+}
+
+.heroui-session-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--foreground) 74%, transparent);
+  font-size: 0.69rem;
+  font-weight: 480;
+  letter-spacing: -0.01em;
+}
+
+.heroui-session-row:hover .heroui-session-title,
+.heroui-session-row.is-selected .heroui-session-title {
+  color: var(--foreground);
+}
+
+.heroui-session-load-more {
+  justify-self: start;
+  display: inline-flex;
+  max-width: 100%;
+  min-height: 1.38rem;
+  cursor: pointer;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid transparent;
+  border-radius: 0.52rem;
+  background: transparent;
+  padding-inline: 0.42rem;
+  color: var(--muted);
+  font-size: 0.63rem;
+  font-weight: 540;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+
+.heroui-session-load-more > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.heroui-session-load-more:hover {
+  border-color: transparent;
+  background: color-mix(in srgb, var(--foreground) 3.5%, transparent);
+  color: var(--foreground);
+}
+
+.heroui-session-action {
+  width: 1.26rem;
+  height: 1.26rem;
+  border-radius: 0.48rem;
+  background: transparent;
+  color: transparent;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+}
+
+.heroui-session-action:hover,
+.heroui-session-action:focus-visible,
+.heroui-session-action[data-state='open'] {
+  background: color-mix(in srgb, var(--foreground) 6%, transparent);
+  color: var(--foreground);
+}
+
+.heroui-session-row:hover .heroui-session-action {
+  color: var(--muted);
+}
+
+.heroui-profile-rail {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.2rem;
+  border: 0;
+  border-radius: 0.68rem;
+  background: color-mix(in srgb, var(--foreground) 2.8%, transparent);
+  padding: 0.16rem;
+}
+
+.heroui-sidebar-profile-zone {
+  padding: 0.34rem 0.1rem 0.02rem;
+  border-top: 1px solid color-mix(in srgb, var(--workbench-divider) 34%, transparent);
+}
+
+.heroui-profile-chip,
+.heroui-profile-action {
+  display: grid;
+  width: 1.28rem !important;
+  height: 1.28rem !important;
+  min-width: 0;
+  min-height: 0;
+  flex-shrink: 0;
+  place-items: center;
+  padding: 0 !important;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.49rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+
+.heroui-profile-chip:hover,
+.heroui-profile-action:hover,
+.heroui-profile-chip.is-active {
+  border-color: color-mix(in srgb, var(--accent) 12%, transparent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  color: var(--accent);
+}
+
+[data-slot='input'],
+[data-slot='textarea'],
+[data-slot='select-trigger'] {
+  border-color: var(--workbench-divider) !important;
+  background: color-mix(in srgb, var(--surface) 86%, transparent) !important;
+  box-shadow: none !important;
+  font-size: 0.75rem;
+}
+
+[data-slot='input']:focus-visible,
+[data-slot='textarea']:focus-visible,
+[data-slot='select-trigger']:focus-visible {
+  border-color: color-mix(in srgb, var(--accent) 24%, var(--workbench-divider)) !important;
+  box-shadow: 0 0 0 0.125rem color-mix(in srgb, var(--accent) 8%, transparent) !important;
+}
+
+[data-slot='dialog-content'] {
+  border-radius: 0.875rem !important;
+  padding: 1rem !important;
+}
+
+[data-slot='dialog-title'] {
+  font-size: 0.95rem !important;
+  letter-spacing: -0.02em;
+}
+
+[data-slot='dialog-description'] {
+  color: var(--ui-text-tertiary) !important;
+  font-size: 0.75rem !important;
+}
+
+[data-slot='dropdown-menu-content'],
+[data-slot='popover-content'],
+[data-slot='select-content'] {
+  border-radius: 0.75rem !important;
+}
+
+[data-slot='composer-surface'] {
+  border-color: var(--workbench-divider) !important;
+  box-shadow:
+    0 0 0 0.0625rem color-mix(in srgb, var(--foreground) 2.5%, transparent),
+    0 0.625rem 1.5rem -1.25rem color-mix(in srgb, #000 15%, transparent) !important;
+}
+
+[data-slot='composer-rich-input'] {
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+[data-slot='composer-meta-row'] {
+  border-color: var(--workbench-divider) !important;
+}
+
+[data-slot='composer-main-row'] {
+  min-height: 2.25rem;
+}
+
+[data-slot='aui_thread-content'] {
+  max-width: min(var(--composer-width), 52rem);
+}
+
+[data-slot='aui_user-message-root'] {
+  filter: none;
+}
+
+.composer-human-message {
+  box-shadow: 0 0.35rem 1rem -0.9rem color-mix(in srgb, #0f172a 12%, transparent) !important;
+}
+
+:root.dark .composer-human-message {
+  box-shadow: 0 0.35rem 1rem -0.9rem color-mix(in srgb, #000 24%, transparent) !important;
+}
+
+/* Tool/thinking blocks now live at message-text alignment (no leading
+   chevron column to escape into), so their headers and bodies share a
+   common left edge with the model's text. */
+[data-slot='aui_assistant-message-content'] > [data-slot='tool-block'],
+[data-slot='aui_assistant-message-content'] > [data-slot='aui_thinking-disclosure'] {
+  width: 100%;
+  max-width: 100%;
+}
+
+[data-slot='aui_assistant-message-content'] .aui-md [data-streamdown='code-block'] code {
+  max-width: none;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  overflow-x: visible;
+  overflow-wrap: inherit;
+  vertical-align: baseline;
+  word-break: inherit;
+  white-space: inherit;
+}
+
+/* Streamdown's adapter wraps code fences in a `data-streamdown="code-block"`
+   container with its own card chrome. We render our own <CodeCard>, so this
+   strips the upstream chrome down to a layout-only passthrough. */
+[data-slot='aui_assistant-message-content'] .aui-md [data-streamdown='code-block'] {
+  contain: none;
+  overflow: visible;
+  margin-block: 0.375rem !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: inherit;
+}
+
+[data-slot='aui_assistant-message-content'] .aui-md [data-streamdown='code-block']:has(.aui-prose-fence) {
+  margin-block: 0 !important;
+}
+
+[data-slot='aui_assistant-message-content'] .aui-md :not(pre) > code {
+  border: 0.0625rem solid var(--ui-inline-code-border);
+  background: var(--ui-inline-code-background);
+  color: var(--ui-inline-code-foreground);
+}
+
+[data-slot='aui_assistant-message-content'] .aui-md :where(.aui-shiki, .aui-shiki > pre) {
+  margin: 0 !important;
+}
+
+[data-slot='aui_assistant-message-content'] .aui-md .aui-md-table {
+  border-spacing: 0;
+}
+
+[data-slot='aui_assistant-message-content'] .aui-md .aui-md-table > table,
+[data-slot='aui_assistant-message-content'] .aui-md .aui-md-table thead,
+[data-slot='aui_assistant-message-content'] .aui-md .aui-md-table tbody,
+[data-slot='aui_assistant-message-content'] .aui-md .aui-md-table tr,
+[data-slot='aui_assistant-message-content'] .aui-md .aui-md-table th,
+[data-slot='aui_assistant-message-content'] .aui-md .aui-md-table td {
+  margin: 0 !important;
+  margin-block-start: 0 !important;
+  margin-block-end: 0 !important;
+}
+
+/* Tool / thinking blocks are scaffolding around the model's reply, so we
+   keep them transparent and fade them slightly. The reading column (prose)
+   stays at full strength; scaffolding lifts back to full opacity on
+   hover/focus so it stays legible when the user actually wants to read it. */
+[data-slot='tool-block'],
+[data-slot='aui_thinking-disclosure'] {
+  background: transparent !important;
+}
+
+[data-slot='aui_assistant-message-content'] > :is([data-slot='tool-block'], [data-slot='aui_thinking-disclosure']) {
+  opacity: 0.67;
+  transition: opacity 120ms ease-out;
+}
+
+[data-slot='aui_assistant-message-content']
+  > :is([data-slot='tool-block'], [data-slot='aui_thinking-disclosure']):is(:hover, :focus-within) {
+  opacity: 1;
+}
+
+/* Conversation block rhythm. Consecutive tool calls stay tight so a step
+   sequence reads as one action group; the gap between any scaffolding
+   block and adjacent prose bumps up so the model's reply visually
+   separates from its scaffolding. */
+[data-slot='tool-block'] + [data-slot='tool-block'] {
+  margin-top: 0.375rem;
+}
+
+[data-slot='tool-block']:has(> :nth-child(2)) + [data-slot='tool-block'] {
+  margin-top: 0.625rem;
+}
+
+[data-slot='aui_assistant-message-content']
+  :is([data-slot='tool-block'], [data-slot='aui_thinking-disclosure'])
+  + .aui-md,
+[data-slot='aui_assistant-message-content']
+  .aui-md
+  + :is([data-slot='tool-block'], [data-slot='aui_thinking-disclosure']) {
+  margin-top: 1rem;
+}
+
+[data-slot='aui_assistant-message-content'] [data-slot='aui_thinking-disclosure'] + [data-slot='tool-block'],
+[data-slot='aui_assistant-message-content'] [data-slot='tool-block'] + [data-slot='aui_thinking-disclosure'] {
+  margin-top: 0.75rem;
+}
+
+[data-slot='aui_assistant-message-content'] > [data-slot='tool-block']:first-child {
+  margin-top: 0;
+}
+
+/* Message action bars — flat icon hits with default dim; only the hovered/focused control is full-strength. */
+[data-slot='aui_msg-actions'] button {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  gap: 0;
+  height: auto;
+  width: auto;
+  min-height: 0;
+  min-width: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+  color: var(--color-muted-foreground);
+  opacity: 0.5;
+}
+
+[data-slot='aui_msg-actions'] button:disabled {
+  cursor: default;
+}
+
+[data-slot='aui_msg-actions'] button:hover {
+  background: transparent;
+  color: var(--color-foreground);
+  opacity: 1;
+}
+
+[data-slot='aui_msg-actions'] button:active {
+  background: transparent;
+}
+
+[data-slot='aui_msg-actions'] button:focus-visible {
+  opacity: 1;
+}
+
+[data-slot='aui_msg-actions'] button svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+/* Live thinking preview window. Pairs with the ResizeObserver in
+   ThinkingDisclosure that pins scrollTop to the bottom — older lines fade
+   into the top mask while the latest tokens settle in below. */
+.thinking-preview {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 28%, black 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 28%, black 100%);
+}

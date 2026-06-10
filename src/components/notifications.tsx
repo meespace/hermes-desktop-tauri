@@ -1,0 +1,186 @@
+import { useStore } from '@nanostores/react'
+import { type ReactNode, useEffect, useRef, useState } from 'react'
+
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Codicon } from '@/components/ui/codicon'
+import { CopyButton } from '@/components/ui/copy-button'
+import { useI18n } from '@/i18n'
+import { triggerHaptic } from '@/lib/haptics'
+import { AlertCircle, AlertTriangle, CheckCircle2, type IconComponent, Info } from '@/lib/icons'
+import { cn } from '@/lib/utils'
+import {
+  $notifications,
+  type AppNotification,
+  clearNotifications,
+  dismissNotification,
+  type NotificationKind
+} from '@/store/notifications'
+
+type ToneVariant = 'default' | 'destructive' | 'warning' | 'success'
+
+const tone: Record<NotificationKind, { icon: IconComponent; iconClass: string; variant: ToneVariant }> = {
+  error: { icon: AlertCircle, iconClass: 'text-destructive', variant: 'destructive' },
+  warning: { icon: AlertTriangle, iconClass: 'text-primary', variant: 'warning' },
+  info: { icon: Info, iconClass: 'text-[var(--muted)]', variant: 'default' },
+  success: { icon: CheckCircle2, iconClass: 'text-primary', variant: 'success' }
+}
+
+const STACK_SURFACE =
+  'pointer-events-auto rounded-[calc(var(--radius)*2)] border border-[var(--border)] bg-[var(--overlay)] shadow-[var(--overlay-shadow)] backdrop-blur-md'
+const GHOST_BTN = 'bg-transparent text-[var(--muted)] hover:text-[var(--foreground)]'
+
+export function NotificationStack() {
+  const { t } = useI18n()
+  const notifications = useStore($notifications)
+  const lastNotificationIdRef = useRef<string | null>(null)
+  const [expanded, setExpanded] = useState(false)
+
+  useEffect(() => {
+    if (notifications.length <= 1) {
+      setExpanded(false)
+    }
+  }, [notifications.length])
+
+  useEffect(() => {
+    const latest = notifications[0]
+
+    if (!latest || latest.id === lastNotificationIdRef.current) {
+      return
+    }
+
+    lastNotificationIdRef.current = latest.id
+
+    if (latest.kind === 'success') {
+      triggerHaptic('success')
+    } else if (latest.kind === 'error') {
+      triggerHaptic('error')
+    } else if (latest.kind === 'warning') {
+      triggerHaptic('warning')
+    }
+  }, [notifications])
+
+  if (notifications.length === 0) {
+    return null
+  }
+
+  const [latest, ...olderNotifications] = notifications
+  const overflowCount = olderNotifications.length
+
+  return (
+    <div
+      aria-label={t.notifications.notifications}
+      className="pointer-events-none absolute left-1/2 top-[calc(var(--titlebar-height)+0.75rem)] z-1050 flex w-[min(32rem,calc(100%-2rem))] -translate-x-1/2 flex-col gap-2"
+      data-slot="notification-stack"
+      role="region"
+    >
+      <NotificationItem notification={latest} />
+      {expanded && olderNotifications.map(n => <NotificationItem key={n.id} notification={n} />)}
+      {overflowCount > 0 && (
+        <div className={cn(STACK_SURFACE, 'flex min-h-8 items-center justify-between rounded-lg px-3 text-xs')}>
+          <button className={cn(GHOST_BTN, 'font-medium')} onClick={() => setExpanded(v => !v)} type="button">
+            {expanded ? t.notifications.hideMore(overflowCount) : t.notifications.showMore(overflowCount)}
+          </button>
+          <button className={GHOST_BTN} onClick={clearNotifications} type="button">
+            {t.common.clear}
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function NotificationItem({ notification }: { notification: AppNotification }) {
+  const { t } = useI18n()
+  const styles = tone[notification.kind]
+  const Icon = styles.icon
+  const hasDetail = Boolean(notification.detail && notification.detail !== notification.message)
+
+  return (
+    <Alert
+      aria-live={notification.kind === 'error' ? 'assertive' : 'polite'}
+      className={cn(STACK_SURFACE, 'grid-cols-[auto_minmax(0,1fr)_auto] pr-2.5')}
+      data-slot="notification-item"
+      role={notification.kind === 'error' ? 'alert' : 'status'}
+      variant="default"
+    >
+      <Icon className={styles.iconClass} />
+      <div className="col-start-2 min-w-0">
+        {notification.title && <AlertTitle className="col-start-auto">{notification.title}</AlertTitle>}
+        <AlertDescription className="col-start-auto">
+          <p className="m-0">{notification.message}</p>
+          {hasDetail && <NotificationDetail detail={notification.detail || ''} />}
+          {notification.action && (
+            <button
+              className="mt-1.5 inline-flex items-center rounded-md bg-primary/15 px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/25"
+              onClick={() => {
+                notification.action?.onClick()
+                dismissNotification(notification.id)
+              }}
+              type="button"
+            >
+              {notification.action.label}
+            </button>
+          )}
+        </AlertDescription>
+      </div>
+      <button
+        aria-label={t.notifications.dismiss}
+        className="col-start-3 -mr-1 grid size-6 place-items-center rounded-md bg-transparent text-[var(--muted)] transition-colors hover:bg-[var(--surface-secondary)] hover:text-foreground"
+        onClick={() => dismissNotification(notification.id)}
+        type="button"
+      >
+        <Codicon name="close" size="0.875rem" />
+      </button>
+    </Alert>
+  )
+}
+
+function NotificationDetail({ detail }: { detail: string }) {
+  const { t } = useI18n()
+
+  return (
+    <details className="mt-2 text-xs text-[var(--muted)]">
+      <summary className="cursor-pointer select-none font-medium text-[var(--muted)] hover:text-[var(--foreground)]">
+        {t.notifications.details}
+      </summary>
+      <div className="mt-1 rounded-[calc(var(--radius)*1.5)] border border-[var(--border)] bg-[var(--surface-secondary)] p-2 shadow-[var(--field-shadow)]">
+        <pre className="max-h-32 whitespace-pre-wrap wrap-break-word font-mono text-[0.6875rem] leading-relaxed">
+          {detail}
+        </pre>
+        <CopyButton
+          appearance="inline"
+          className="mt-1 inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[0.6875rem] text-[var(--muted)] hover:bg-[var(--surface-secondary)] hover:text-foreground"
+          errorMessage={t.notifications.copyDetailFailed}
+          iconClassName="size-3"
+          label={t.notifications.copyDetail}
+          text={detail}
+        >
+          {t.notifications.copyDetail}
+        </CopyButton>
+      </div>
+    </details>
+  )
+}
+
+export function InlineNotice({
+  kind = 'info',
+  title,
+  children,
+  className
+}: {
+  kind?: NotificationKind
+  title?: string
+  children: ReactNode
+  className?: string
+}) {
+  const styles = tone[kind]
+  const Icon = styles.icon
+
+  return (
+    <Alert className={cn('min-w-0', className)} role={kind === 'error' ? 'alert' : 'status'} variant={styles.variant}>
+      <Icon />
+      {title && <AlertTitle>{title}</AlertTitle>}
+      <AlertDescription className={cn(!title && 'row-start-1')}>{children}</AlertDescription>
+    </Alert>
+  )
+}

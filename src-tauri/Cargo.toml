@@ -1,0 +1,45 @@
+[package]
+name = "hermes-desktop-community"
+version = "0.16.0"
+description = "Hermes Desktop Community"
+authors = ["Hermes Desktop Community"]
+license = "MIT"
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+name = "app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.6.2", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+log = "0.4"
+tauri = { version = "2.11.2", features = ["devtools"] }
+tauri-plugin-log = "2"
+tauri-plugin-websocket = "2.4.2"
+reqwest = { version = "0.12", features = ["blocking", "json", "stream"] }
+futures-util = "0.3"
+tokio = { version = "1", features = ["full"] }
+rand = "0.8"
+regex = "1"
+chrono = { version = "0.4", features = ["serde"] }
+mime_guess = "2"
+base64 = "0.22"
+open = "5"
+dirs = "5"
+rfd = "0.15"
+arboard = "3"
+png = "0.17"
+portable-pty = "0.9"
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "gif", "webp", "bmp", "tiff"] }
+notify-rust = "4.17"
+notify = "6.1.1"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+block2 = "0.6.2"
+objc2 = "0.6.4"
+objc2-av-foundation = { version = "0.3.2", features = ["AVCaptureDevice", "AVMediaFormat", "block2"] }
